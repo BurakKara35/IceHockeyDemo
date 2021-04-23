@@ -7,6 +7,10 @@ TagManager:
   - BluePlayer
   - RedPlayer
   - Hole
+  - ScoreManager
+  - UI
+  - Edge
+  - Ball
   layers:
   - Default
   - TransparentFX

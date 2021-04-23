@@ -2,15 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputPlayer : MonoBehaviour
+public class InputPlayer : PlayerBase
 {
-    private enum States { Wait, Left, Right}
-    private States state;
-
-    private Rigidbody rigidbody;
-    private Vector3 movement;
-    private float speed = 2;
-
     private float touchPosition_x;
 
     private void Awake()
@@ -25,32 +18,7 @@ public class InputPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (state != States.Wait)
-        {
-            if (state == States.Left)
-                MoveLeft();
-            else
-                MoveRight();
-
-            Move();
-        }
-    }
-
-    private void MoveLeft()
-    {
-        movement = -Vector3.right * Time.fixedDeltaTime * speed;
-    }
-
-    private void MoveRight()
-    {
-        movement = Vector3.right * Time.fixedDeltaTime * speed;
-    }
-
-    private void Move()
-    {
-        Vector3 pos = transform.position + movement;
-        pos.x = Mathf.Clamp(pos.x, -3.6f, 3.6f);
-        rigidbody.MovePosition(pos);
+        base.FixedUpdate();
     }
 
     private void InputHandler()
