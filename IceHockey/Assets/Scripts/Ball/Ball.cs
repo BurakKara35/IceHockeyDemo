@@ -20,6 +20,8 @@ public class Ball : MonoBehaviour
 
     private float speed = 3;
 
+    private bool collidednWithAnObject = false; // for AIPlayer to check collision point correctly
+
     private void Awake()
     {
         renderer = GetComponent<Renderer>();
@@ -58,6 +60,7 @@ public class Ball : MonoBehaviour
             materialState = MaterialStates.Blue;
             renderer.material = blueMaterial;
             direction = CalculateNewDirection(transform.InverseTransformPoint(collision.transform.position));
+            collidednWithAnObject = true;
         }
 
         if (collision.gameObject.CompareTag("RedPlayer"))
@@ -65,11 +68,13 @@ public class Ball : MonoBehaviour
             materialState = MaterialStates.Red;
             renderer.material = redMaterial;
             direction = CalculateNewDirection(transform.InverseTransformPoint(collision.transform.position));
+            collidednWithAnObject = true;
         }
 
         if (collision.gameObject.CompareTag("Edge"))
         {
             direction = CalculateNewDirectionOnCollisionEdge(transform.InverseTransformPoint(collision.transform.position), collision.gameObject.name);
+            collidednWithAnObject = true;
         }
     }
 
@@ -99,10 +104,15 @@ public class Ball : MonoBehaviour
         }
         else if (collisionPoint.x < -0.15 && collisionPoint.x >= -1.5)
         {
-            if (direction.x >= 0)
+            if (direction.x > 0)
             {
                 newDirection.z *= -1;
                 newDirection.x *= -1;
+            }
+            else if (direction.x == 0)
+            {
+                newDirection.z *= -1;
+                newDirection.x = -1;
             }
             else
             {
@@ -111,10 +121,15 @@ public class Ball : MonoBehaviour
         }
         else if (collisionPoint.x <= 1.5 && collisionPoint.x > 0.15)
         {
-            if (direction.x <= 0)
+            if (direction.x < 0)
             {
                 newDirection.z *= -1;
                 newDirection.x *= -1;
+            }
+            else if (direction.x == 0)
+            {
+                newDirection.z *= -1;
+                newDirection.x = 1;
             }
             else
             {
@@ -145,5 +160,20 @@ public class Ball : MonoBehaviour
             newDirection.z *= -1;
 
         return newDirection;
+    }
+
+    public float Direction_x
+    {
+        get { return direction.x; }
+    }
+    public float Direction_z
+    {
+        get { return direction.z; }
+    }
+
+    public bool CollidedWithAnObject
+    {
+        get { return collidednWithAnObject; }
+        set { collidednWithAnObject = value; }
     }
 }
