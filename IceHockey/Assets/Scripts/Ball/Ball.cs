@@ -102,12 +102,11 @@ public class Ball : MonoBehaviour
             if (direction.x >= 0)
             {
                 newDirection.z *= -1;
-                newDirection.x = -1;
+                newDirection.x *= -1;
             }
             else
             {
                 newDirection.z *= -1;
-                newDirection.x *= -1;
             }
         }
         else if (collisionPoint.x <= 1.5 && collisionPoint.x > 0.15)
@@ -115,12 +114,11 @@ public class Ball : MonoBehaviour
             if (direction.x <= 0)
             {
                 newDirection.z *= -1;
-                newDirection.x = 1;
+                newDirection.x *= -1;
             }
             else
             {
                 newDirection.z *= -1;
-                newDirection.x *= -1;
             }
         }
         else if(collisionPoint.x > 1.5)

@@ -6,13 +6,18 @@ public class InputPlayer : PlayerBase
 {
     private float touchPosition_x;
 
-    private void Awake()
+    private enum InputStates { Up, Down}
+    private InputStates inputState;
+    private bool inputRemaining = false;
+
+    private void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        inputState = InputStates.Up;
     }
 
     private void Update()
     {
+        base.Update();
         InputHandler();
     }
 
@@ -23,21 +28,43 @@ public class InputPlayer : PlayerBase
 
     private void InputHandler()
     {
-        if (Input.GetMouseButton(0))
+        CheckInput();
+
+        if (inputState == InputStates.Down)
         {
             touchPosition_x = GetMousePosition_x();
 
-            if (touchPosition_x - transform.position.x > 0.1f) // for avoid jittering
-                state = States.Right;
-            else if (touchPosition_x < transform.position.x)
-                state = States.Left;
+            if (inputRemaining)
+            {
+                if (touchPosition_x - transform.position.x < 0.1 && touchPosition_x - transform.position.x > -0.1) // for avoid jittering
+                    inputRemaining = false;
+                else if (touchPosition_x > transform.position.x)
+                    state = States.Right;
+                else if (touchPosition_x < transform.position.x)
+                    state = States.Left;
+            }
             else
-                state = States.Wait;
+                inputState = InputStates.Up;
+
+        }
+        else if (inputState == InputStates.Up)
+        {
+            state = States.Wait;
+        }
+    }
+
+    private void CheckInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            inputState = InputStates.Down;
+            inputRemaining = true;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            state = States.Wait;
+            inputState = InputStates.Up;
+            inputRemaining = false;
         }
     }
 

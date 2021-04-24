@@ -11,7 +11,12 @@ public abstract class PlayerBase : MonoBehaviour
     protected Vector3 movement;
     protected float speed = 4;
 
-    protected void FixedUpdate()
+    private void Awake()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+    }
+
+    protected void Update()
     {
         if (state != States.Wait)
         {
@@ -19,9 +24,16 @@ public abstract class PlayerBase : MonoBehaviour
                 MoveLeft();
             else
                 MoveRight();
-
-            Move();
         }
+        else
+        {
+            Wait();
+        }
+    }
+
+    protected void FixedUpdate()
+    {
+        Move();
     }
 
     protected void MoveLeft()
@@ -39,5 +51,10 @@ public abstract class PlayerBase : MonoBehaviour
         Vector3 pos = transform.position + movement;
         pos.x = Mathf.Clamp(pos.x, -3.6f, 3.6f);
         rigidbody.MovePosition(pos);
+    }
+
+    protected void Wait()
+    {
+        movement = Vector3.zero;
     }
 }
