@@ -112,12 +112,12 @@ public class AIPlayer : PlayerBase
 
     private void ShootFromLeft()
     {
-        newDestination_x = possibleCollisionPoint_x + GameManager.playerWidth / 2f;
+        newDestination_x = possibleCollisionPoint_x + GameManager.playerWidth / 2.5f;
     }
 
     private void ShootFromRight()
     {
-        newDestination_x = possibleCollisionPoint_x - GameManager.playerWidth / 2;
+        newDestination_x = possibleCollisionPoint_x - GameManager.playerWidth / 2.5f;
     }
 
     private void CheckMovement()
