@@ -16,10 +16,15 @@ public class AIPlayer : PlayerBase
 
     private float newDestination_x;
     private bool reachedNewDestination = false;
-
     private bool newDestinationDefinedForWorstCase = false;
 
-    private int gameLevel = 5;
+    private int gameLevel;
+
+    private void OnEnable()
+    {
+        startingPosition = new Vector3(0, 0.2f, 8);
+        transform.position = startingPosition;
+    }
 
     private void Start()
     {
@@ -48,13 +53,12 @@ public class AIPlayer : PlayerBase
         if (aIState == AIStates.FindCollisionPoint)
         {
             possibleCollisionPoint_x = Distance() * ballScript.Direction_x + ball.position.x;
+            reachedNewDestination = false;
+            newDestinationDefinedForWorstCase = false;
             aIState = AIStates.SelectAIType;
         }
         else if (aIState == AIStates.SelectAIType)
         {
-            reachedNewDestination = false;
-            newDestinationDefinedForWorstCase = false;
-
             int rnd = Random.Range(1, gameLevel);
 
             if (rnd <= gameLevel - 1)
@@ -84,17 +88,12 @@ public class AIPlayer : PlayerBase
 
     private void BestCaseAI()
     {
-        if (BallIsInOurSideAndComingToUs())
-        {
-            if (HoleAndCollisionPointAreCloseInX())
-                ShootFromMiddle();
-            else if (HoleIsInRightSideofCollisionPoint())
-                ShootFromLeft();
-            else if (HoleIsInLeftSideofCollisionPoint())
-                ShootFromRight();
-        }
-        else
-            state = States.Wait;
+        if (HoleAndCollisionPointAreCloseInX())
+            ShootFromMiddle();
+        else if (HoleIsInRightSideofCollisionPoint())
+            ShootFromLeft();
+        else if (HoleIsInLeftSideofCollisionPoint())
+            ShootFromRight();
     }
 
     private void WorstCaseAI()
@@ -127,18 +126,13 @@ public class AIPlayer : PlayerBase
         {
             if (newDestination_x - transform.position.x < 0.1 && newDestination_x - transform.position.x > -0.1) // for avoid jittering
                 reachedNewDestination = true;
-            if (newDestination_x < transform.position.x)
+            else if (newDestination_x < transform.position.x)
                 state = States.Left;
             else if (newDestination_x > transform.position.x)
                 state = States.Right;
         }
         else
             state = States.Wait;
-    }
-
-    private bool BallIsInOurSideAndComingToUs()
-    {
-        return ballScript.Direction_z > 0 && ball.position.z > 0;
     }
 
     private bool HoleAndCollisionPointAreCloseInX()
@@ -154,5 +148,10 @@ public class AIPlayer : PlayerBase
     private bool HoleIsInRightSideofCollisionPoint()
     {
         return hole.position.x > possibleCollisionPoint_x;
+    }
+
+    public int GameLevel
+    {
+        set { gameLevel = value; }
     }
 }

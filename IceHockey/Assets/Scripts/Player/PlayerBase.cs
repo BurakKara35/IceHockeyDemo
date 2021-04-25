@@ -11,6 +11,8 @@ public abstract class PlayerBase : MonoBehaviour
     protected Vector3 movement;
     protected float speed = 4;
 
+    protected Vector3 startingPosition;
+
     private void Awake()
     {
         rigidbody = GetComponent<Rigidbody>();

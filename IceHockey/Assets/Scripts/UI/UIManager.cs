@@ -8,23 +8,28 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text redScore;
     [SerializeField] private Text blueScore;
 
+    [SerializeField] private Text winnerText;
+    [SerializeField] private Text scoreText;
+
     public void changeRedScore(int score)
     {
         redScore.text = "" + score;
-        CheckFinalScore(score);
     }
 
     public void changeBlueScore(int score)
     {
         blueScore.text = "" + score;
-        CheckFinalScore(score);
     }
 
-    private void CheckFinalScore(int score)
+    public void InitializeScore()
     {
-        if(score == 5)
-        {
-            Debug.Log("Finish");
-        }
+        blueScore.text = "0";
+        redScore.text = "0";
+    }
+
+    public void SetWinner(string winner, int blueScore, int redScore)
+    {
+        scoreText.text = blueScore + " - " + redScore;
+        winnerText.text = winner + " WIN.";
     }
 }

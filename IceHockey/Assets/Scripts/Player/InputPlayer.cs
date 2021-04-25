@@ -10,6 +10,12 @@ public class InputPlayer : PlayerBase
     private InputStates inputState;
     private bool inputRemaining = false;
 
+    private void OnEnable()
+    {
+        startingPosition = new Vector3(0, 0.2f, -8);
+        transform.position = startingPosition;
+    }
+
     private void Start()
     {
         inputState = InputStates.Up;
