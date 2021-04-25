@@ -161,7 +161,7 @@ public class Ball : MonoBehaviour
             else
                 newDirection.x = -1;
 
-            newDirection.z = FindDegreeForEdgeShotAccordingToColors(newDirection.z);
+            newDirection.z = FindDegreeForEdgeShotAccordingToColors();
         }
         else if(HitLeftEdgeofPlayer(collisionPoint))
         {
@@ -170,7 +170,7 @@ public class Ball : MonoBehaviour
             else
                 newDirection.x = 1;
 
-            newDirection.z = FindDegreeForEdgeShotAccordingToColors(newDirection.z);
+            newDirection.z = FindDegreeForEdgeShotAccordingToColors();
         }
 
         return newDirection;
@@ -208,14 +208,12 @@ public class Ball : MonoBehaviour
         return direction.x == 0;
     }
 
-    private float FindDegreeForEdgeShotAccordingToColors(float direction_z)
+    private float FindDegreeForEdgeShotAccordingToColors()
     {
-        if (materialState == MaterialStates.Blue)
+        if (transform.position.z < 0) // Blue
             return 0.16f;
-        else if (materialState == MaterialStates.Red)
-            return -0.16f;
         else
-            return -direction_z;
+            return -0.16f;
     }
 
     private Vector3 StartingPositionForBlue()
