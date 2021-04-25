@@ -100,7 +100,7 @@ public class AIPlayer : PlayerBase
     {
         if (!newDestinationDefinedForWorstCase)
         {
-            newDestination_x = Random.Range(possibleCollisionPoint_x - 1.5f, possibleCollisionPoint_x + 1.5f);
+            newDestination_x = Random.Range(possibleCollisionPoint_x - GameManager.playerWidth, possibleCollisionPoint_x + GameManager.playerWidth);
             newDestinationDefinedForWorstCase = true;
         }
     }
@@ -112,12 +112,12 @@ public class AIPlayer : PlayerBase
 
     private void ShootFromLeft()
     {
-        newDestination_x = possibleCollisionPoint_x + 0.75f;
+        newDestination_x = possibleCollisionPoint_x + GameManager.playerWidth / 2f;
     }
 
     private void ShootFromRight()
     {
-        newDestination_x = possibleCollisionPoint_x - 0.75f;
+        newDestination_x = possibleCollisionPoint_x - GameManager.playerWidth / 2;
     }
 
     private void CheckMovement()

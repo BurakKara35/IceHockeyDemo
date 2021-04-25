@@ -68,20 +68,14 @@ public class Ball : MonoBehaviour
         {
             materialState = MaterialStates.Blue;
             renderer.material = blueMaterial;
-            direction = CalculateNewDirection(transform.InverseTransformPoint(collision.transform.position));
-            collidedWithAnObject = true;
-            hitCountToPlayers++;
-            InreaseHoleScale();
+            HitAPlayer(collision);
         }
 
         if (collision.gameObject.CompareTag("RedPlayer"))
         {
             materialState = MaterialStates.Red;
             renderer.material = redMaterial;
-            direction = CalculateNewDirection(transform.InverseTransformPoint(collision.transform.position));
-            collidedWithAnObject = true;
-            hitCountToPlayers++;
-            InreaseHoleScale();
+            HitAPlayer(collision);
         }
 
         if (collision.gameObject.CompareTag("Edge"))
@@ -89,6 +83,14 @@ public class Ball : MonoBehaviour
             direction = CalculateNewDirectionOnCollisionEdge(collision.gameObject.name);
             collidedWithAnObject = true;
         }
+    }
+
+    private void HitAPlayer(Collision collision)
+    {
+        direction = CalculateNewDirection(transform.InverseTransformPoint(collision.transform.position));
+        collidedWithAnObject = true;
+        hitCountToPlayers++;
+        IncreaseHoleScale();
     }
 
     private void Score()
@@ -120,12 +122,12 @@ public class Ball : MonoBehaviour
         }
         else if (HitLeftSideofPlayer(collisionPoint))
         {
-            if (direction.x > 0)
+            if (GoingRight())
             {
                 newDirection.z *= -1;
                 newDirection.x *= -1;
             }
-            else if (direction.x == 0)
+            else if (GoingStraight())
             {
                 newDirection.z *= -1;
                 newDirection.x = -1;
@@ -137,12 +139,12 @@ public class Ball : MonoBehaviour
         }
         else if (HitRightSideofPlayer(collisionPoint))
         {
-            if (direction.x < 0)
+            if (GoingLeft())
             {
                 newDirection.z *= -1;
                 newDirection.x *= -1;
             }
-            else if (direction.x == 0)
+            else if (GoingStraight())
             {
                 newDirection.z *= -1;
                 newDirection.x = 1;
@@ -154,29 +156,21 @@ public class Ball : MonoBehaviour
         }
         else if(HitRightEdgeofPlayer(collisionPoint))
         {
-            if (direction.z > 0)
-            {
-                newDirection.z = -0.16f;
+            if (GoingUp())
                 newDirection.x = -1;
-            }
             else
-            {
-                newDirection.z = 0.16f;
                 newDirection.x = -1;
-            }
+
+            newDirection.z = FindDegreeForEdgeShotAccordingToColors(newDirection.z);
         }
         else if(HitLeftEdgeofPlayer(collisionPoint))
         {
-            if (direction.z > 0)
-            {
-                newDirection.z = -0.16f;
+            if (GoingUp())
                 newDirection.x = 1;
-            }
             else
-            {
-                newDirection.z = 0.16f;
                 newDirection.x = 1;
-            }
+
+            newDirection.z = FindDegreeForEdgeShotAccordingToColors(newDirection.z);
         }
 
         return newDirection;
@@ -192,6 +186,36 @@ public class Ball : MonoBehaviour
             newDirection.z *= -1;
 
         return newDirection;
+    }
+
+    private bool GoingUp()
+    {
+        return direction.z > 0;
+    }
+
+    private bool GoingLeft()
+    {
+        return direction.x < 0;
+    }
+
+    private bool GoingRight()
+    {
+        return direction.x > 0;
+    }
+
+    private bool GoingStraight()
+    {
+        return direction.x == 0;
+    }
+
+    private float FindDegreeForEdgeShotAccordingToColors(float direction_z)
+    {
+        if (materialState == MaterialStates.Blue)
+            return 0.16f;
+        else if (materialState == MaterialStates.Red)
+            return -0.16f;
+        else
+            return -direction_z;
     }
 
     private Vector3 StartingPositionForBlue()
@@ -231,30 +255,30 @@ public class Ball : MonoBehaviour
 
     private bool HitMiddleofPlayer(Vector3 collisionPoint)
     {
-        return collisionPoint.x <= 0.15 && collisionPoint.x >= -0.15;
+        return collisionPoint.x <= GameManager.playerWidth / 12 && collisionPoint.x >= -GameManager.playerWidth / 12;
     }
 
     private bool HitLeftSideofPlayer(Vector3 collisionPoint)
     {
-        return collisionPoint.x < -0.15 && collisionPoint.x >= -1.8;
+        return collisionPoint.x < -GameManager.playerWidth / 12 && collisionPoint.x >= -GameManager.playerWidth;
     }    
     
     private bool HitRightSideofPlayer(Vector3 collisionPoint)
     {
-        return collisionPoint.x <= 1.8 && collisionPoint.x > 0.15;
+        return collisionPoint.x <= GameManager.playerWidth && collisionPoint.x > GameManager.playerWidth / 12;
     }
 
     private bool HitRightEdgeofPlayer(Vector3 collisionPoint)
     {
-        return collisionPoint.x > 1.8; ;
+        return collisionPoint.x > GameManager.playerWidth; ;
     }
 
     private bool HitLeftEdgeofPlayer(Vector3 collisionPoint)
     {
-        return collisionPoint.x < -1.8;
+        return collisionPoint.x < -GameManager.playerWidth;
     }
 
-    private void InreaseHoleScale()
+    private void IncreaseHoleScale()
     {
         if (hitCountToPlayers > 1 && hitCountToPlayers <= 21)
             hole.IncreaseScale();

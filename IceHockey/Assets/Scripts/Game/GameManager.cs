@@ -9,8 +9,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject bluePlayer;
     [SerializeField] private GameObject ball;
 
+    [Header("UI Objects")]
     [SerializeField] private GameObject gameLevelMenu;
     [SerializeField] private GameObject finishUI;
+
+    public static float playerWidth = 1.8f;
 
     private int gameLevel;
 
