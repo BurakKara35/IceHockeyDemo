@@ -100,7 +100,7 @@ public class AIPlayer : PlayerBase
     {
         if (!newDestinationDefinedForWorstCase)
         {
-            newDestination_x = Random.Range(possibleCollisionPoint_x - GameManager.playerWidth - 0.3f, possibleCollisionPoint_x + GameManager.playerWidth - 0.3f);
+            newDestination_x = Random.Range(possibleCollisionPoint_x - GameManager.playerWidth / 2, possibleCollisionPoint_x + GameManager.playerWidth / 2);
             newDestinationDefinedForWorstCase = true;
         }
     }
